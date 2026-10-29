@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "kurokit": {
+      "url": "https://mcp.kurokit.com/mcp",
+      "headers": {
+        "Authorization": "Bearer PASTE_TOKEN_FROM_DASHBOARD_MCP"
+      }
+    }
+  }
+}

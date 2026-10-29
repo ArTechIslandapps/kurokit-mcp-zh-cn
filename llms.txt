@@ -1,0 +1,67 @@
+# KuroKit MCP
+
+KuroKit 监控网页、RSS 源和官方 API。当有内容发生变化时，它会告知 AI 助手。
+
+官方安装指南：https://kurokit.com/docs/mcp
+控制台：https://kurokit.com
+价格：https://kurokit.com/pricing
+Chrome 扩展：https://chromewebstore.google.com/detail/kurokit-webpage-change-mo/fndfgkdjhbaoiadepfhgmhbgfjgfpiao
+Edge 扩展：https://microsoftedge.microsoft.com/addons/detail/kurokit-webpage-change-/oiohkchggekefhcdamceinpmabpfiifk
+
+## 端点
+
+- MCP 网址：https://mcp.kurokit.com/mcp
+- 传输方式：Streamable HTTP
+- 身份验证：Authorization: Bearer <access_token>
+
+如果客户端在自带的连接器商店或 MCP 应用商店中列出了 KuroKit，请使用该条目并完成 OAuth。只有配置自定义远程 server 时，才手动粘贴 Bearer token。
+
+Token 页面：https://kurokit.com/dashboard/mcp
+
+不要指导用户直接打开 https://kurokit.com/oauth/authorize。只有当 MCP 客户端在地址栏带上 ?client_id= 打开它时才有效。
+
+## 首次运行
+
+1. 创建 KuroKit 账户。
+2. 如需监控网页，请安装浏览器扩展（Chrome 或 Edge），并允许被监控的站点。
+3. 将 MCP 网址添加到 AI 应用，或使用应用中的 KuroKit 条目。
+4. 调用 listMonitors 检查连接。
+5. 为用户要监控的网页、RSS 源或官方 API 创建一个监控项。
+
+RSS 和官方 API 监控不需要扩展。网页监控需要扩展，因为 MCP 无法使用用户的浏览器会话。
+
+## 客户端说明
+
+- Claude：docs/connect-claude.md
+- Cursor：docs/connect-cursor.md
+- ChatGPT/Codex：docs/connect-chatgpt.md
+- Grok/Grok Bot：docs/connect-grok-bot.md
+- 其他客户端：docs/connect-any-client.md
+- 支持矩阵：docs/client-support.md
+
+Grok 和 Grok Bot 支持自定义远程 MCP server。Meta Muse 通过其 Connector Platform 支持 MCP，但 KuroKit 并非经过审核的 Muse 连接器。OpenAI dots 使用插件，而 KuroKit 尚未发布插件。不要声称 KuroKit 已收录在 Muse 或 dots 的目录中，也不要告诉用户可以在 dots 中直接使用自定义 MCP 网址。
+
+## 工作流自动化（推送）
+
+对于 n8n、Make、Zapier 或你自己的服务，请使用 webhook。在 notifyChannels 中加入 `webhook` 并传入 webhookUrl；KuroKit 会 POST 带签名的 JSON（`schema_version: 2`），超时 5s，重试间隔为 1m/5m/30m/30m（共 5 次尝试）。`getEvents` 只支持拉取；没有 MCP 匹配事件流。指南：docs/webhooks.md。
+
+## 常见错误
+
+- 没有工具或返回 401：创建新 token，粘贴到应用设置中，然后重新加载。
+- “Not in the MCP catalog”：选择 Add custom / manual remote server，并使用小写的 https://mcp.kurokit.com/mcp。
+- Last check 为空：打开被监控的页面，点击扩展，确认 This site 显示 Allowed。
+- 首次检查为 0 个事件：正常；首次检查只保存快照。等待第二次检查。
+- n8n/Make/Zapier 收不到内容：检查 Webhook，使用生产环境 HTTPS 网址，启用工作流，并在 5s 内返回 2xx。参见 docs/webhooks.md。
+
+## 方案
+
+免费方案包含一个生效中的监控项，且不会过期。当前价格和限制以 https://kurokit.com/pricing 为准。不要编造方案数字。
+
+## 许可
+
+文档和图片：CC BY 4.0（LICENSE）。
+JSON、YAML 及其他代码示例：MIT（LICENSE-CODE）。
+
+## 仓库
+
+本仓库只包含安装文档和示例。托管版 MCP server、Web 应用和扩展的源代码不在此发布。

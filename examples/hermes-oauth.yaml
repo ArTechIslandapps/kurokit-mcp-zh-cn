@@ -1,0 +1,4 @@
+mcp_servers:
+  kurokit:
+    url: "https://mcp.kurokit.com/mcp"
+    auth: oauth
